@@ -20,6 +20,9 @@ import {
 import { NavUser } from "~/components/nav-user"
 import data from "~/dashboard/data.json"
 
+import { useAuth } from "~/contexts/auth-context"
+import { Navigate } from "react-router"
+
 const user = {
   name: "Admin Turu",
   email: "m@example.com",
@@ -27,6 +30,18 @@ const user = {
 }
 
 export default function Page() {
+  const { isAuthenticated, loading } = useAuth()
+
+  // Show loading while checking auth status
+  if (loading) {
+    return <div>Loading...</div>
+  }
+
+  // Redirect to login if not authenticated
+  if (!isAuthenticated) {
+    return <Navigate to="/login" replace />
+  }
+  
   return (
     <SidebarProvider>
       <AppSidebar />

@@ -13,9 +13,39 @@ export function LoginForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
+  const [loading, setLoading] = useState(false)
+  const [formData, setFormData] = useState({
+    identifier: '',
+    password: ''
+  })
+  const [showPassword, setShowPassword] = useState(false)
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setLoading(true)
+
+    try {
+      const result = await authApi.login(formData)
+      
+      // Store token (consider using secure storage)
+      localStorage.setItem('accessToken', result.accessToken)
+      localStorage.setItem('tokenExpiry', result.accessTokenExpiresAt)
+      
+      toast.success('Login successful!')
+      
+      // Redirect to dashboard
+      window.location.href = '/dashboard'
+      
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : 'Login failed')
+    } finally {
+      setLoading(false)
+    }
+  }
+
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
-      <form>
+      <form onSubmit={handleSubmit} >
         <div className="flex flex-col gap-6">
           <div className="flex flex-col items-center gap-2">
             <a
@@ -26,7 +56,7 @@ export function LoginForm({
                 {/* <GalleryVerticalEnd className="size-6" /> */}
                 <img src="/assets/images/logo-me-red.png" alt="Mata Elang Logo" className="size-12" />
               </div>
-              <span className="sr-only">Acme Inc.</span>
+              <span className="sr-only">Mata Elang</span>
             </a>
             <h1 className="text-xl font-bold">Welcome to Mata Elang</h1>
             <div className="text-center text-sm">
@@ -38,28 +68,60 @@ export function LoginForm({
           </div>
           <div className="flex flex-col gap-6">
             <div className="grid gap-3">
-              <Label htmlFor="email">Email</Label>
+              <Label htmlFor="email">Email or Username</Label>
               <Input
-                id="email"
-                type="email"
-                placeholder="m@example.com"
+                id="identifier"
+                type="text"
+                placeholder="Enter email or username"
+                value={formData.identifier}
+                onChange={(e) => setFormData(prev => ({ ...prev, identifier: e.target.value }))}
                 required
               />
             </div>
             <div className="grid gap-3">
-                <div className="flex items-center">
-                  <Label htmlFor="password">Password</Label>
-                  <a
-                    href="#"
-                    className="ml-auto text-sm underline-offset-2 hover:underline"
-                  >
-                    Forgot your password?
-                  </a>
-                </div>
-                <Input id="password" type="password" required />
+              <div className="flex items-center">
+              <Label htmlFor="password">Password</Label>
+              <a
+                href="#"
+                className="ml-auto text-sm underline-offset-2 hover:underline"
+              >
+                Forgot your password?
+              </a>
               </div>
-            <Button type="submit" className="w-full">
-              Login
+              <div className="relative">
+              <Input
+                id="password"
+                type={showPassword ? "text" : "password"}
+                placeholder="Enter your password"
+                value={formData.password}
+                onChange={(e) => setFormData(prev => ({ ...prev, password: e.target.value }))}
+                required
+              />
+              <button
+                type="button"
+                className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground"
+                onClick={() => setShowPassword((v) => !v)}
+                tabIndex={-1}
+                aria-label={showPassword ? "Hide password" : "Show password"}
+              >
+                {showPassword ? (
+                // Eye-off icon
+                <svg xmlns="http://www.w3.org/2000/svg" className="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.875 18.825A10.05 10.05 0 0112 19c-5 0-9.27-3.11-11-7.5a11.72 11.72 0 012.62-3.95m3.38-2.6A9.956 9.956 0 0112 5c5 0 9.27 3.11 11 7.5a11.72 11.72 0 01-2.62 3.95m-3.38 2.6A9.956 9.956 0 0112 19c-1.07 0-2.1-.13-3.08-.37M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3l18 18" />
+                </svg>
+                ) : (
+                // Eye icon
+                <svg xmlns="http://www.w3.org/2000/svg" className="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                </svg>
+                )}
+              </button>
+              </div>
+            </div>
+            <Button type="submit" className="w-full" disabled={loading}>
+              {loading ? 'Logging in...' : 'Login'}
             </Button>
           </div>
           <div className="after:border-border relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t">
