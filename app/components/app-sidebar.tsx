@@ -10,7 +10,9 @@ import {
   PieChart,
   Settings2,
   SquareTerminal,
+  ChevronsUpDown,
 } from "lucide-react"
+import type { LucideIcon } from "lucide-react"
 
 import { NavMain } from "~/components/nav-main"
 import { NavProjects } from "~/components/nav-projects"
@@ -24,26 +26,54 @@ import {
   SidebarRail,
 } from "~/components/ui/sidebar"
 
+type TeamLogo = 
+  | { type: "icon"; value: LucideIcon }
+  | { type: "image"; value: string }
+
+type Team = {
+  name: string
+  logo: TeamLogo
+}
+
+function TeamLogo({ logo, className }: { logo: TeamLogo; className?: string }) {
+  if (logo.type === "icon") {
+    const IconComponent = logo.value
+    return <IconComponent className={className} />
+  }
+  
+  return (
+    <img 
+      src={logo.value} 
+      alt="Team logo" 
+      className={`${className} object-contain`}
+    />
+  )
+}
+
 // This is sample data.
 const data = {
+  brand: {
+    name: "Mata Elang",
+    logo: { type: "image" as const, value: "/assets/images/logo-me-red.png" },
+  },
   user: {
-    name: "shadcn",
+    name: "Admin Turu",
     email: "m@example.com",
     avatar: "/avatars/shadcn.jpg",
   },
   teams: [
     {
-      name: "Mata Elang",
+      name: "Tenant 1",
       logo: { type: "image" as const, value: "/assets/images/logo-me-red.png" },
       plan: "Enterprise",
     },
     {
-      name: "Acme Corp.",
+      name: "Tenant 2",
       logo: { type: "icon" as const, value: AudioWaveform },
       plan: "Startup",
     },
     {
-      name: "Evil Corp.",
+      name: "Tenant 3",
       logo: { type: "icon" as const, value: Command },
       plan: "Free",
     },
@@ -158,14 +188,22 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
-        <TeamSwitcher teams={data.teams} />
+        <div className="flex h-12 items-center gap-2 px-2">
+          <div className="flex aspect-square size-8 items-center justify-center rounded-lg">
+            <TeamLogo logo={data.brand.logo} className="size-8" />
+          </div>
+          <div className="grid flex-1 text-left text-sm leading-tight">
+            <span className="truncate font-medium">{data.brand.name}</span>
+          </div>
+        </div>
       </SidebarHeader>
       <SidebarContent>
         <NavMain items={data.navMain} />
         <NavProjects projects={data.projects} />
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={data.user} />
+        <TeamSwitcher teams={data.teams} />
+        {/* <NavUser user={data.user} /> */}
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>
