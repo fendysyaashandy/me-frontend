@@ -43,6 +43,7 @@ export const authApi = {
     
     if (!response.ok) {
       const error = await response.json()
+      console.error('Login error:', error)
       throw new Error(error.message || 'Login failed')
     }
     

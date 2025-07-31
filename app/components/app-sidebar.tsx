@@ -1,4 +1,4 @@
-import * as React from "react"
+import * as React from "react";
 import {
   AudioWaveform,
   BookOpen,
@@ -11,43 +11,43 @@ import {
   Settings2,
   SquareTerminal,
   ChevronsUpDown,
-} from "lucide-react"
-import type { LucideIcon } from "lucide-react"
+} from "lucide-react";
+import type { LucideIcon } from "lucide-react";
 
-import { NavMain } from "~/components/nav-main"
-import { NavProjects } from "~/components/nav-projects"
-import { NavUser } from "~/components/nav-user"
-import { TeamSwitcher } from "~/components/team-switcher"
+import { NavMain } from "~/components/nav-main";
+import { NavProjects } from "~/components/nav-projects";
+import { NavUser } from "~/components/nav-user";
+import { TeamSwitcher } from "~/components/team-switcher";
 import {
   Sidebar,
   SidebarContent,
   SidebarFooter,
   SidebarHeader,
   SidebarRail,
-} from "~/components/ui/sidebar"
+} from "~/components/ui/sidebar";
 
-type TeamLogo = 
+type TeamLogo =
   | { type: "icon"; value: LucideIcon }
-  | { type: "image"; value: string }
+  | { type: "image"; value: string };
 
 type Team = {
-  name: string
-  logo: TeamLogo
-}
+  name: string;
+  logo: TeamLogo;
+};
 
 function TeamLogo({ logo, className }: { logo: TeamLogo; className?: string }) {
   if (logo.type === "icon") {
-    const IconComponent = logo.value
-    return <IconComponent className={className} />
+    const IconComponent = logo.value;
+    return <IconComponent className={className} />;
   }
-  
+
   return (
-    <img 
-      src={logo.value} 
-      alt="Team logo" 
+    <img
+      src={logo.value}
+      alt="Team logo"
       className={`${className} object-contain`}
     />
-  )
+  );
 }
 
 // This is sample data.
@@ -182,13 +182,13 @@ const data = {
       icon: Map,
     },
   ],
-}
+};
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
-        <div className="flex h-12 items-center gap-2 px-2">
+        <div className="flex h-12 items-center gap-2">
           <div className="flex aspect-square size-8 items-center justify-center rounded-lg">
             <TeamLogo logo={data.brand.logo} className="size-8" />
           </div>
@@ -207,5 +207,5 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>
-  )
+  );
 }
