@@ -32,14 +32,14 @@ const checkPasswordStrength = (password: string) => {
     "text-red-500",
     "text-red-400",
     "text-yellow-500",
-    "text-blue-500",
+    "text-green-400",
     "text-green-500",
   ][score];
   const bgColor = [
     "bg-red-500",
     "bg-red-400",
     "bg-yellow-500",
-    "bg-blue-500",
+    "bg-green-400",
     "bg-green-500",
   ][score];
 
@@ -153,9 +153,9 @@ export function SignUpForm({
     // }
 
     // Check password strength (optional - you can remove this if you want to allow weak passwords)
-    if (passwordStrength.score < 5) {
-      return;
-    }
+    // if (passwordStrength.score < 4) {
+    //   return;
+    // }
 
     // Clear previous errors
     setErrors({

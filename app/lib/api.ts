@@ -1,5 +1,5 @@
 // app/lib/api.ts
-const API_BASE_URL = 'http://172.16.0.12:5266'
+const API_BASE_URL = 'http://100.115.83.118:5266/'
 
 export interface LoginRequest {
   identifier: string
