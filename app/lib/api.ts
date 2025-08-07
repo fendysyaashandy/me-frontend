@@ -1,5 +1,5 @@
 // app/lib/api.ts
-const API_BASE_URL = 'http://localhost:5266'
+const API_BASE_URL = 'http://100.115.83.118:5266/'
 
 export interface LoginRequest {
   identifier: string
@@ -43,6 +43,7 @@ export const authApi = {
     
     if (!response.ok) {
       const error = await response.json()
+      console.error('Login error:', error)
       throw new Error(error.message || 'Login failed')
     }
     
